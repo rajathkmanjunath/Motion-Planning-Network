@@ -2,8 +2,6 @@ import torch
 from torch.utils.data import Dataset
 import os
 
-# ws_location = '/home/rajath/project_workspace/src/panda_arm_motion_planning/MPNet/dataset/'
-
 class points_dataset(Dataset):
     def __init__(self, list_IDs, path):
         self.list_IDs = list_IDs

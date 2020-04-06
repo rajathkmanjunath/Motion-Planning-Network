@@ -1,5 +1,4 @@
-src/panda_arm_motion_planning/dataset/
-src/panda_arm_motion_planning/MPNet/dataset/
+dataset/
 devel/
 logs/
 build/
