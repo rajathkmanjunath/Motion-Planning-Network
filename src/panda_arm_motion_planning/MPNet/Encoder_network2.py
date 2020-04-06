@@ -27,52 +27,17 @@ def combined_loss_function(W, x, h, recons_x, lam):
     return mse + contractive_loss.mul_(lam)
 
 def main(args):
-    # use_cuda = torch.cuda.is_available()
-    # device = torch.device("cuda:0" if use_cuda else "cpu")
     cudnn.benchmark = True
-
     # Parameters
     params = {'batch_size': args.batch_size,
               'shuffle': True,
               'num_workers': args.num_workers}
-
-    # max_epochs = 100
-    # numfiles = 200
 
     partition = {'train':[i+1 for i in range(int(0.9*args.num_files))],
                  'test':[i+1 for i in range(int(0.9*args.num_files), args.num_files)]}
 
     training_set = points_dataset(partition['train'], args.path)
     train_loader = data.DataLoader(training_set, **params)
-    #
-    # batch_size = 16
-    # num_epochs = 100
-    # learning_rate = 0.001
-
-# train_loader = torch.utils.data.DataLoader(dataset = train_data, batch_size=batch_size,
-#                                            shuffle=True)
-# test_loader = torch.utils.data.DataLoader(dataset = test_data, batch_size=batch_size,
-#                                            shuffle=True)
-
-# class CAE(nn.Module):
-#     def __init__(self):
-#         super(CAE, self).__init__()
-#         self.encoder = nn.Sequential(nn.Linear(115200, 512),
-#                                      nn.PReLU(),
-#                                      nn.Linear(512, 128),
-#                                      nn.PReLU(),
-#                                      nn.Linear(128, 32))
-#
-#         self.decoder = nn.Sequential(nn.Linear(32, 128),
-#                                      nn.PReLU(),
-#                                      nn.Linear(128, 512),
-#                                      nn.PReLU(),
-#                                      nn.Linear(512, 115200))
-#
-#     def forward(self, x):
-#         h1 = self.encoder(x)
-#         h2 = self.decoder(h1)
-#         return h1, h2
 
     if(args.cuda == 'cuda'):
         autoencoder.cuda()
@@ -100,7 +65,7 @@ def main(args):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1, n_total_steps,
                                                                       loss.item()))
 
-        torch.save(autoencoder.state_dict(), os.path.curdir+'weights.pt')
+        torch.save(autoencoder.state_dict(), os.path.join(os.path.curdir,'weights.pt'))
 
 # with torch.no_grad():
 #     n_correct = 0
