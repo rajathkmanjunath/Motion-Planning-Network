@@ -42,7 +42,7 @@ def main(args):
     planner = MPNet(88920, 14, 7)
 
     if (args.cuda == 'cuda'):
-        planner.cuda()
+        planner = planner.cuda()
 
     parameters = planner.parameters()
     optimizer = torch.optim.Adam(parameters, lr=args.learning_rate)

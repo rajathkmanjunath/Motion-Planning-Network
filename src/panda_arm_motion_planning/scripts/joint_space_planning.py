@@ -9,12 +9,12 @@ from utils.panda_planner import PandaArmPlanner
 def main(args):
     try:
         arm = PandaArmPlanner()
-        while (not arm.add_box(1, [0.7, 0, 0.1, 0], [0.4, 0.4, .1])): continue
-        while (not arm.add_box(2, [0.9, 0., 0.4, 0], [0.4, 0.4, .1])): continue
-        while (not arm.add_box(3, [1.1, 0., 0.7, 0], [0.4, 0.4, .1])): continue
-        while (not arm.add_box(4, [0., 0.7, 0.1, 0], [0.4, 0.4, .1])): continue
-        while (not arm.add_box(5, [0., 0.9, 0.4, 0], [0.4, 0.4, .1])): continue
-        while (not arm.add_box(6, [0., 1.1, 0.7, 0], [0.4, 0.4, .1])): continue
+        while (not arm.add_box(1, [0.7, 0., 0.1, 0.], [0.4, 0.4, 0.1])): continue
+        while (not arm.add_box(2, [0.9, 0., 0.4, 0.], [0.4, 0.4, 0.1])): continue
+        while (not arm.add_box(3, [1.1, 0., 0.7, 0.], [0.4, 0.4, 0.1])): continue
+        while (not arm.add_box(4, [0., 0.7, 0.1, 0.], [0.4, 0.4, 0.1])): continue
+        while (not arm.add_box(5, [0., 0.9, 0.4, 0.], [0.4, 0.4, 0.1])): continue
+        while (not arm.add_box(6, [0., 1.1, 0.7, 0.], [0.4, 0.4, 0.1])): continue
 
         arm.get_obstacle_data(args.path, args.step_size)
 

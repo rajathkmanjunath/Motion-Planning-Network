@@ -21,7 +21,6 @@ class MPNet(nn.Module):
                                   nn.Linear(32, output_size), nn.PReLU(), nn.Dropout())
 
     def forward(self, point_cloud, states):
-        Z = self.ENet(point_cloud)
-        # print(Z.shape, states.shape)
-        S = torch.cat((Z, states), dim=1)
-        return self.PNet(S)
+        z = self.ENet(point_cloud)
+        s = torch.cat((z, states), dim=1)
+        return self.PNet(s)

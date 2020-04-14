@@ -1,49 +1,50 @@
+import argparse
+import os
+
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
-import glob
-from torch.utils.data import Dataset
-from torch.utils import data
-import numpy as np
-import pickle
-from src.panda_arm_motion_planning.scripts.dataset_class import points_dataset
 from torch.backends import cudnn
-import os
-import argparse
-from src.panda_arm_motion_planning.scripts.cautoencoder import CAE
+from torch.utils import data
 
-# ws_location = '/home/rajath/project_workspace/src/panda_arm_motion_planning/MPNet/dataset/'
+from utils.dataset_class import points_dataset
+from utils.enet import ENet
+
 
 # CUDA for PyTorch
-mse_loss = nn.MSELoss()
-autoencoder = CAE()
+def combined_loss_function(W, mse, lam):
+    contractive_loss = torch.sum(Variable(W) ** 2, dim=1).sum().mul_(lam)
+    return mse + contractive_loss
 
-def combined_loss_function(W, x, h, recons_x, lam):
-    mse = mse_loss(recons_x, x)
-    dh = h * (1 - h)
-    w_sum = torch.sum(Variable(W) ** 2, dim=1)
-    w_sum = w_sum.unsqueeze(1)
-    contractive_loss = torch.sum(torch.mm(dh ** 2, w_sum), 0)
-    return mse + contractive_loss.mul_(lam)
 
 def main(args):
     cudnn.benchmark = True
     # Parameters
-    params = {'batch_size': args.batch_size,
-              'shuffle': True,
-              'num_workers': args.num_workers}
+    train_params = {'batch_size': args.batch_size,
+                    'shuffle': True,
+                    'num_workers': args.num_workers}
 
-    partition = {'train':[i+1 for i in range(int(0.9*args.num_files))],
-                 'test':[i+1 for i in range(int(0.9*args.num_files), args.num_files)]}
+    test_params = {'batch_size': args.batch_size,
+                   'shuffle': False,
+                   'num_workers': args.num_workers}
+
+    partition = {'train': [i + 1 for i in range(int(0.9 * args.num_files))],
+                 'test': [i + 1 for i in range(int(0.9 * args.num_files), args.num_files)]}
 
     training_set = points_dataset(partition['train'], args.path)
-    train_loader = data.DataLoader(training_set, **params)
+    train_loader = data.DataLoader(training_set, **train_params)
 
-    if(args.cuda == 'cuda'):
-        autoencoder.cuda()
+    test_set = points_dataset(partition['train'], args.path)
+    test_loader = data.DataLoader(training_set, **test_params)
+
+    mse_loss = nn.MSELoss()
+    autoencoder = ENet(90036)
+
+    if (args.cuda == 'cuda'):
+        autoencoder = autoencoder.cuda()
 
     parameters = autoencoder.parameters()
-    optimizer = torch.optim.SGD(parameters, lr = args.learning_rate)
+    optimizer = torch.optim.Adam(parameters, lr=args.learning_rate)
 
     n_total_steps = len(train_loader)
 
@@ -52,34 +53,41 @@ def main(args):
             points = points.float()
             points = Variable(points)
 
-            if(args.cuda == 'cuda'):
+            if (args.cuda == 'cuda'):
                 points = points.cuda()
-            encoded, decoded = autoencoder(points)
+
+            _, decoded = autoencoder(points)
+            mse = mse_loss(decoded, points)
+
             W = autoencoder.state_dict()['encoder.4.weight']
-            loss = combined_loss_function(W,points,encoded,decoded,args.lam)
+
+            loss = combined_loss_function(W, mse, args.lam)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 1 == 0):
-                print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1, n_total_steps,
-                                                                      loss.item()))
+            if ((i + 1) % 3 == 0):
+                print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
+                                                                          n_total_steps,
+                                                                          loss.item()))
 
-        torch.save(autoencoder.state_dict(), os.path.join(os.path.curdir,'weights.pt'))
+        torch.save(autoencoder.state_dict(), os.path.join(os.path.curdir, 'weights.pt'))
 
-# with torch.no_grad():
-#     n_correct = 0
-#     n_samples = 0
-#     for points in test_loader:
-#         points = points.float()
-#         if(torch.cuda.is_available()):
-#             points = points.cuda()
-#         _, decoded = autoencoder(points)
-#         n_samples += labels.shape[0]
-#         n_correct = (decoded == points).sum().item()
-#
-#     acc = 100.0 * n_correct / n_samples
-#     print('accuracy = {0}'.format(acc))
+    with torch.no_grad():
+        n_correct = 0
+        n_samples = 0
+        for points in test_loader:
+            points = points.float()
+            if (torch.cuda.is_available()):
+                points = points.cuda()
+            _, decoded = autoencoder(points)
+            n_samples += points.shape[0]
+            n_correct = (decoded == points).sum().item()
+            print(points[0][:10], decoded[0][10])
+
+        acc = 100.0 * n_correct / n_samples
+        print('accuracy = {0}'.format(acc))
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
