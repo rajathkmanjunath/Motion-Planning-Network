@@ -1,3 +1,5 @@
+*.npy
+*.pt
 dataset/
 devel/
 logs/
