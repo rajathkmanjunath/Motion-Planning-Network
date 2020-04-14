@@ -6,11 +6,11 @@ from torch.utils.data import Dataset
 from torch.utils import data
 import numpy as np
 import pickle
-from dataset_class import points_dataset
+from src.panda_arm_motion_planning.scripts.dataset_class import points_dataset
 from torch.backends import cudnn
 import os
 import argparse
-from cautoencoder import CAE
+from src.panda_arm_motion_planning.scripts.cautoencoder import CAE
 
 # ws_location = '/home/rajath/project_workspace/src/panda_arm_motion_planning/MPNet/dataset/'
 
