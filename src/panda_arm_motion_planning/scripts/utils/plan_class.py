@@ -19,5 +19,4 @@ class plan_dataset(Dataset):
         plan = np.load(os.path.join(self.path, 'plan' + str(ID) + '.npy'))
         states = torch.from_numpy(states)
         plan = torch.from_numpy(plan)
-        return (states, plan)
-
+        return states, plan
