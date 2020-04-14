@@ -1,5 +1,6 @@
 *.npy
 *.pt
+.idea/
 dataset/
 devel/
 logs/
