@@ -66,7 +66,7 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 3 == 0):
+            if ((i + 1) % 50 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))
