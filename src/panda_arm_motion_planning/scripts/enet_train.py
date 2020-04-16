@@ -91,7 +91,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, default='/scratch/$USER/dataset/', help='location of dataset directory')
+    parser.add_argument('--path', type=str, default='/scratch/rkm350/enet/dataset/',
+                        help='location of dataset directory')
     parser.add_argument('--num_epochs', type=int, default=100, help='number of epochs')
     parser.add_argument('--batch_size', type=int, default=32, help='batch size')
     parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate')

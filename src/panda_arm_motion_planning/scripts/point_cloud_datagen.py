@@ -43,11 +43,12 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, default='/scratch/$USER/dataset/', help='Location for storing dataset')
+    parser.add_argument('--path', type=str, default='/scratch/rkm350/enet/dataset/',
+                        help='Location for storing dataset')
     parser.add_argument('--num_samples', type=int, default=50000, help='Number of samples to generate')
-    parser.add_argument('--xrange', type=tuple, default=(-100, 100), help='The range of x')
-    parser.add_argument('--yrange', type=tuple, default=(-100, 100), help='The range of y')
-    parser.add_argument('--zrange', type=tuple, default=(-100, 100), help='The range of z')
+    parser.add_argument('--xrange', type=tuple, default=(-1, 1), help='The range of x')
+    parser.add_argument('--yrange', type=tuple, default=(-1, 1), help='The range of y')
+    parser.add_argument('--zrange', type=tuple, default=(-1, 1), help='The range of z')
     parser.add_argument('--step_size', type=float, default=0.01, help='step size of samples')
 
     args = parser.parse_args()
