@@ -35,7 +35,7 @@ def main(args):
     train_loader = data.DataLoader(training_set, **train_params)
 
     test_set = points_dataset(partition['train'], args.path)
-    test_loader = data.DataLoader(training_set, **test_params)
+    test_loader = data.DataLoader(test_set, **test_params)
 
     mse_loss = nn.MSELoss()
     autoencoder = ENet(90036)
