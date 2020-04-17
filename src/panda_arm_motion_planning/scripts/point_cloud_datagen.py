@@ -4,8 +4,8 @@ import os
 import time
 
 
-def scaling_factor(value, lower_limit, upper_limit):
-    return (value - lower_limit) * (upper_limit - lower_limit)
+# def scaling_factor(value, lower_limit, upper_limit):
+#     return (value - lower_limit) * (upper_limit - lower_limit)
 
 
 def main(args):
@@ -14,12 +14,13 @@ def main(args):
     for index in range(args.num_samples):
         lis = []
         for _ in range(6):
-            x = scaling_factor(np.random.random(), args.xrange[0], args.xrange[1])
-            y = scaling_factor(np.random.random(), args.yrange[0], args.yrange[1])
-            z = scaling_factor(np.random.random(), args.zrange[0], args.zrange[1])
+            x = np.random.randint(args.xrange[0], args.xrange[1]) * args.step_size
+            y = np.random.randint(args.yrange[0], args.yrange[1]) * args.step_size
+            z = np.random.randint(args.zrange[0], args.zrange[1]) * args.step_size
             xd, yd, zd = 0.4, 0.4, 0.1
             for i in np.arange(x - xd / 2, x + xd / 2, args.step_size):
                 for j in np.arange(y - yd / 2, y + yd / 2, args.step_size):
+                    print(x - xd / 2, y - yd / 2, i, j)
                     lis.append(np.array([i, j, z - zd / 2]))
                     lis.append(np.array([i, j, z + zd / 2]))
 
@@ -34,6 +35,7 @@ def main(args):
                     lis.append(np.array([x + xd / 2, i, j]))
 
         points = np.array(lis).reshape(-1)
+        # print(points.shape)
         if (not os.path.exists(args.path)):
             os.makedirs(args.path)
         np.save(os.path.join(args.path, 'points' + str(index + 1) + '.npy'), points)
@@ -46,9 +48,9 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default='/scratch/rkm350/enet/dataset/',
                         help='Location for storing dataset')
     parser.add_argument('--num_samples', type=int, default=50000, help='Number of samples to generate')
-    parser.add_argument('--xrange', type=tuple, default=(-1, 1), help='The range of x')
-    parser.add_argument('--yrange', type=tuple, default=(-1, 1), help='The range of y')
-    parser.add_argument('--zrange', type=tuple, default=(-1, 1), help='The range of z')
+    parser.add_argument('--xrange', type=tuple, default=(-100, 100), help='The range of x')
+    parser.add_argument('--yrange', type=tuple, default=(-100, 100), help='The range of y')
+    parser.add_argument('--zrange', type=tuple, default=(-100, 100), help='The range of z')
     parser.add_argument('--step_size', type=float, default=0.01, help='step size of samples')
 
     args = parser.parse_args()

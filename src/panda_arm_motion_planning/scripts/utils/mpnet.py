@@ -17,8 +17,8 @@ class MPNet(nn.Module):
                                   nn.Linear(512, 256), nn.PReLU(), nn.Dropout(),
                                   nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
                                   nn.Linear(128, 64), nn.PReLU(), nn.Dropout(),
-                                  nn.Linear(64, 32), nn.PReLU(), nn.Dropout(),
-                                  nn.Linear(32, output_size), nn.PReLU(), nn.Dropout())
+                                  nn.Linear(64, 32), nn.PReLU(),
+                                  nn.Linear(32, output_size))
 
     def forward(self, point_cloud, states):
         z = self.ENet(point_cloud)
