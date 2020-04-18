@@ -35,7 +35,7 @@ def main(args):
     planner = PNet(14, 7)
 
     if (args.cuda == 'cuda'):
-        planner = planner.cuda()
+        planner.cuda()
 
     parameters = planner.parameters()
     optimizer = torch.optim.Adam(parameters, lr=args.learning_rate)
@@ -46,6 +46,7 @@ def main(args):
         for i, (states, plan) in enumerate(train_loader):
             states = states.float()
             plan = plan.float()
+            plan = Variable(plan)
             states = Variable(states)
 
             if (args.cuda == 'cuda'):
