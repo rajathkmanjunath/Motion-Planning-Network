@@ -22,7 +22,7 @@ def main(args):
                    'shuffle': False,
                    'num_workers': args.num_workers}
 
-    partition = {'train': [i + 1 for i in range(int(0.9 * args.num_files))],
+    partition = {'train': [i + 1 for i in range(args.num_files)],
                  'test': [i + 1 for i in range(int(0.9 * args.num_files), args.num_files)]}
 
     training_set = plan_dataset(partition['train'], args.path)
@@ -33,13 +33,14 @@ def main(args):
 
     mse = nn.MSELoss()
     planner = PNet(14, 7)
+    if (os.path.isfile(os.path.join(os.path.curdir, 'pnet_weights.pt'))):
+        planner.load_state_dict(torch.load(os.path.join(os.path.curdir, 'pnet_weights.pt')))
 
     if (args.cuda == 'cuda'):
         planner.cuda()
 
     parameters = planner.parameters()
-    optimizer = torch.optim.Adam(parameters, lr=args.learning_rate)
-
+    optimizer = torch.optim.SGD(parameters, lr=args.learning_rate)
     n_total_steps = len(train_loader)
 
     for epoch in range(args.num_epochs):
@@ -59,12 +60,12 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 200 == 0):
+            if ((i + 1) % 400 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))
 
-    torch.save(planner.state_dict(), os.path.join(os.path.curdir, 'end_to_end_weights.pt'))
+    torch.save(planner.state_dict(), os.path.join(os.path.curdir, 'pnet_weights.pt'))
 
     with torch.no_grad():
         n_correct = 0
@@ -78,9 +79,10 @@ def main(args):
                 plan = plan.cuda()
 
             prediction = planner(states)
-            print(prediction[0], plan[0])
+            print(prediction[0])
+            print(plan[0])
             n_samples += plan.shape[0]
-            n_correct = (abs(prediction - plan) <= 0.01).sum().item()
+            n_correct = ((prediction - plan) ** 2 <= 0.01).sum().item()
 
         acc = 100.0 * n_correct / n_samples
         print('accuracy = {0}'.format(acc))

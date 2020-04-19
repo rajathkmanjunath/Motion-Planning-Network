@@ -18,5 +18,5 @@ class PNet(nn.Module):
                                     nn.Linear(48, 32), nn.PReLU(),
                                     nn.Linear(32, output_size))
 
-    def forward(self, input):
-        return self.fulcon(input)
+    def forward(self, intensor):
+        return self.fulcon(intensor)
