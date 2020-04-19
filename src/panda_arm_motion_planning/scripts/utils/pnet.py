@@ -14,8 +14,7 @@ class PNet(nn.Module):
                                     nn.Linear(256, 256), nn.PReLU(), nn.Dropout(),
                                     nn.Linear(256, 128), nn.PReLU(), nn.Dropout(),
                                     nn.Linear(128, 64), nn.PReLU(), nn.Dropout(),
-                                    nn.Linear(64, 48), nn.PReLU(), nn.Dropout(),
-                                    nn.Linear(48, 32), nn.PReLU(),
+                                    nn.Linear(64, 32), nn.PReLU(),
                                     nn.Linear(32, output_size))
 
     def forward(self, intensor):
