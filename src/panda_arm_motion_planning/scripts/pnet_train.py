@@ -40,7 +40,7 @@ def main(args):
         planner.cuda()
 
     parameters = planner.parameters()
-    optimizer = torch.optim.SGD(parameters, lr=args.learning_rate)
+    optimizer = torch.optim.Adagrad(parameters, lr=args.learning_rate)
     n_total_steps = len(train_loader)
 
     for epoch in range(args.num_epochs):
@@ -60,7 +60,7 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 400 == 0):
+            if ((i + 1) % 500 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))
@@ -82,7 +82,7 @@ def main(args):
             print(prediction[0])
             print(plan[0])
             n_samples += plan.shape[0]
-            n_correct = ((prediction - plan) ** 2 <= 0.01).sum().item()
+            n_correct = ((prediction - plan) ** 2 <= 0.1).sum().item()
 
         acc = 100.0 * n_correct / n_samples
         print('accuracy = {0}'.format(acc))
