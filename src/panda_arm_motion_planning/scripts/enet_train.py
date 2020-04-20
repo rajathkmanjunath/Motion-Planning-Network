@@ -83,7 +83,7 @@ def main(args):
             _, decoded = autoencoder(points)
             n_samples += points.shape[0]
             n_correct = (decoded == points).sum().item()
-            print(points[0][:10], decoded[0][10])
+            print(points[0][:10], decoded[0][:10])
 
         acc = 100.0 * n_correct / n_samples
         print('accuracy = {0}'.format(acc))
