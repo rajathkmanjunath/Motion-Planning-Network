@@ -82,7 +82,7 @@ def main(args):
                 points = points.cuda()
             _, decoded = autoencoder(points)
             n_samples += points.shape[0]
-            n_correct = (decoded == points).sum().item()
+            n_correct = ((decoded - points) ** 2 < 0.01).sum().item()
             print(points[0][:10], decoded[0][:10])
 
         acc = 100.0 * n_correct / n_samples
