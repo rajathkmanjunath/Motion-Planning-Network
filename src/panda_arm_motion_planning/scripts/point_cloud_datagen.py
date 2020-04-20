@@ -39,7 +39,7 @@ def main(args):
                     lis.append(np.array([x - xd / 2, ytemp, ztemp]))
                     lis.append(np.array([x + xd / 2, ytemp, ztemp]))
         points = np.array(lis).reshape(-1)
-        print(points.shape)
+        # print(points.shape)
         if (not os.path.exists(args.path)):
             os.makedirs(args.path)
         np.save(os.path.join(args.path, 'points' + str(index + 1) + '.npy'), points)
