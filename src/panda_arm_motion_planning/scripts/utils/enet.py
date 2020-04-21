@@ -6,9 +6,7 @@ class ENet(nn.Module):
         super(ENet, self).__init__()
         self.encoder = nn.Sequential(nn.Linear(input_size, 28800),
                                      nn.PReLU(),
-                                     nn.Linear(28800, 9600),
-                                     nn.PReLU(),
-                                     nn.Linear(9600, 3200),
+                                     nn.Linear(28800, 3200),
                                      nn.PReLU(),
                                      nn.Linear(3200, 1024),
                                      nn.PReLU(),
@@ -22,9 +20,7 @@ class ENet(nn.Module):
                                      nn.PReLU(),
                                      nn.Linear(1024, 3200),
                                      nn.PReLU(),
-                                     nn.Linear(3200, 9600),
-                                     nn.PReLU(),
-                                     nn.Linear(9600, 28800),
+                                     nn.Linear(3200, 28800),
                                      nn.PReLU(),
                                      nn.Linear(28800, input_size))
 
