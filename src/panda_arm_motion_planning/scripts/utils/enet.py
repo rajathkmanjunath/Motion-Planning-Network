@@ -4,45 +4,29 @@ import torch.nn as nn
 class ENet(nn.Module):
     def __init__(self, input_size):
         super(ENet, self).__init__()
-        self.encoder = nn.Sequential(nn.Linear(input_size, 40000),
+        self.encoder = nn.Sequential(nn.Linear(input_size, 28800),
                                      nn.PReLU(),
-                                     nn.Linear(40000, 20000),
+                                     nn.Linear(28800, 9600),
                                      nn.PReLU(),
-                                     nn.Linear(20000, 10000),
+                                     nn.Linear(9600, 3200),
                                      nn.PReLU(),
-                                     nn.Linear(10000, 5000),
+                                     nn.Linear(3200, 1024),
                                      nn.PReLU(),
-                                     nn.Linear(5000, 2500),
+                                     nn.Linear(1024, 512),
                                      nn.PReLU(),
-                                     nn.Linear(2500, 1250),
-                                     nn.PReLU(),
-                                     nn.Linear(1250, 512),
-                                     nn.PReLU(),
-                                     nn.Linear(512, 256),
-                                     nn.PReLU(),
-                                     nn.Linear(256, 128),
-                                     nn.PReLU(),
-                                     nn.Linear(128, 32))
+                                     nn.Linear(512, 256))
 
-        self.decoder = nn.Sequential(nn.Linear(32, 128),
+        self.decoder = nn.Sequential(nn.Linear(256, 512),
                                      nn.PReLU(),
-                                     nn.Linear(128, 256),
+                                     nn.Linear(512, 1024),
                                      nn.PReLU(),
-                                     nn.Linear(256, 512),
+                                     nn.Linear(1024, 3200),
                                      nn.PReLU(),
-                                     nn.Linear(512, 1250),
+                                     nn.Linear(3200, 9600),
                                      nn.PReLU(),
-                                     nn.Linear(1250, 2500),
+                                     nn.Linear(9600, 28800),
                                      nn.PReLU(),
-                                     nn.Linear(2500, 5000),
-                                     nn.PReLU(),
-                                     nn.Linear(5000, 10000),
-                                     nn.PReLU(),
-                                     nn.Linear(10000, 20000),
-                                     nn.PReLU(),
-                                     nn.Linear(20000, 40000),
-                                     nn.PReLU(),
-                                     nn.Linear(40000, input_size))
+                                     nn.Linear(28800, input_size))
 
     def forward(self, x):
         h1 = self.encoder(x)
