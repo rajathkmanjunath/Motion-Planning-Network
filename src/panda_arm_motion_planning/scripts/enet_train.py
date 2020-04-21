@@ -66,7 +66,7 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 20 == 0):
+            if ((i + 1) % 1 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))
@@ -78,7 +78,7 @@ def main(args):
         n_samples = 0
         for points in test_loader:
             points = points.float()
-            if (torch.cuda.is_available()):
+            if (args.cuda == 'cuda'):
                 points = points.cuda()
             _, decoded = autoencoder(points)
             n_samples += points.shape[0]
@@ -102,3 +102,4 @@ if __name__ == '__main__':
     parser.add_argument('--cuda', type=str, default='cuda', help='Cuda for processing the network')
     args = parser.parse_args()
     main(args)
+

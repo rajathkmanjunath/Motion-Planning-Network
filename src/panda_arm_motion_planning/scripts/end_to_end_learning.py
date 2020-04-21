@@ -113,4 +113,3 @@ if __name__ == '__main__':
     parser.add_argument('--cuda', type=str, default='cuda', help='Cuda for processing the network')
     args = parser.parse_args()
     main(args)
-
