@@ -28,17 +28,19 @@ def main(args):
                    'shuffle': False,
                    'num_workers': args.num_workers}
 
-    partition = {'train': [i + 1 for i in range(int(0.9 * args.num_files))],
+    partition = {'train': [i + 1 for i in range(args.num_files)],
                  'test': [i + 1 for i in range(int(0.9 * args.num_files), args.num_files)]}
 
     training_set = points_dataset(partition['train'], args.path)
     train_loader = data.DataLoader(training_set, **train_params)
 
-    test_set = points_dataset(partition['train'], args.path)
+    test_set = points_dataset(partition['test'], args.path)
     test_loader = data.DataLoader(test_set, **test_params)
 
     mse_loss = nn.MSELoss()
     autoencoder = ENet(3456)
+    if (os.path.exists(os.path.join(os.curdir, 'enet_weights.pt'))):
+        autoencoder.load_state_dict(torch.load(os.path.join(os.curdir, 'enet_weights.pt')))
 
     if (args.cuda == 'cuda'):
         autoencoder = autoencoder.cuda()
@@ -71,7 +73,7 @@ def main(args):
                                                                           n_total_steps,
                                                                           loss.item()))
 
-        torch.save(autoencoder.state_dict(), os.path.join(os.path.curdir, 'weights.pt'))
+        torch.save(autoencoder.state_dict(), os.path.join(os.path.curdir, 'enet_weights.pt'))
 
     with torch.no_grad():
         n_correct = 0
@@ -102,4 +104,3 @@ if __name__ == '__main__':
     parser.add_argument('--cuda', type=str, default='cuda', help='Cuda for processing the network')
     args = parser.parse_args()
     main(args)
-
