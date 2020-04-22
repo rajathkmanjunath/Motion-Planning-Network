@@ -33,8 +33,8 @@ def main(args):
 
     mse = nn.MSELoss()
     planner = PNet(14, 7)
-    if (os.path.isfile(os.path.join(os.path.curdir, 'pnet_weights.pt'))):
-        planner.load_state_dict(torch.load(os.path.join(os.path.curdir, 'pnet_weights.pt')))
+    # if (os.path.isfile(os.path.join(os.path.curdir, 'pnet_weights.pt'))):
+    #     planner.load_state_dict(torch.load(os.path.join(os.path.curdir, 'pnet_weights.pt')))
 
     if (args.cuda == 'cuda'):
         planner.cuda()
