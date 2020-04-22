@@ -4,25 +4,25 @@ import torch.nn as nn
 class ENet(nn.Module):
     def __init__(self, input_size):
         super(ENet, self).__init__()
-        self.encoder = nn.Sequential(nn.Linear(input_size, 28800),
+        self.encoder = nn.Sequential(nn.Linear(input_size, 512),
                                      nn.PReLU(),
-                                     nn.Linear(28800, 3200),
+                                     nn.Linear(512, 256),
                                      nn.PReLU(),
-                                     nn.Linear(3200, 1024),
+                                     nn.Linear(256, 128),
                                      nn.PReLU(),
-                                     nn.Linear(1024, 512),
+                                     nn.Linear(128, 64),
                                      nn.PReLU(),
-                                     nn.Linear(512, 256))
+                                     nn.Linear(64, 32))
 
-        self.decoder = nn.Sequential(nn.Linear(256, 512),
+        self.decoder = nn.Sequential(nn.Linear(32, 64),
                                      nn.PReLU(),
-                                     nn.Linear(512, 1024),
+                                     nn.Linear(64, 128),
                                      nn.PReLU(),
-                                     nn.Linear(1024, 3200),
+                                     nn.Linear(128, 256),
                                      nn.PReLU(),
-                                     nn.Linear(3200, 28800),
+                                     nn.Linear(256, 512),
                                      nn.PReLU(),
-                                     nn.Linear(28800, input_size))
+                                     nn.Linear(512, input_size))
 
     def forward(self, x):
         h1 = self.encoder(x)

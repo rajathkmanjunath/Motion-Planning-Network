@@ -38,7 +38,7 @@ def main(args):
     test_loader = data.DataLoader(test_set, **test_params)
 
     mse_loss = nn.MSELoss()
-    autoencoder = ENet(86400)
+    autoencoder = ENet(3456)
 
     if (args.cuda == 'cuda'):
         autoencoder = autoencoder.cuda()
@@ -66,7 +66,7 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 1 == 0):
+            if ((i + 1) % 40 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))

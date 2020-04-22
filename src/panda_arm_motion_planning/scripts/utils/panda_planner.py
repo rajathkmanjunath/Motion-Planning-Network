@@ -135,11 +135,11 @@ class PandaArmPlanner(object):
     def get_plan(self, path):
         if (len(self.joint_values)):
             for i in range(len(self.joint_values) - 1):
-                temp = np.array([self.joint_values[i], self.joint_goal]).reshape(-1)
+                temp = np.array([self.joint_values[i], self.joint_goal]).flatten()
                 np.save(os.path.join(path, 'states' + str(self.index) + '.npy'), temp)
                 np.save(os.path.join(path, 'plan' + str(self.index) + '.npy'), self.joint_values[i + 1])
                 self.index += 1
-            temp = np.array([self.joint_values[-1], self.joint_goal]).reshape(-1)
+            temp = np.array([self.joint_values[-1], self.joint_goal]).flatten()
             np.save(os.path.join(path, 'states' + str(self.index) + '.npy'), temp)
             np.save(os.path.join(path, 'plan' + str(self.index) + '.npy'), self.joint_values[-1])
             self.index += 1

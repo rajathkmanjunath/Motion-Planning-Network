@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import os
 
 import rospy
 
@@ -16,7 +17,10 @@ def main(args):
         while (not arm.add_box(5, [0., 0.9, 0.4, 0.], [0.4, 0.4, 0.1])): continue
         while (not arm.add_box(6, [0., 1.1, 0.7, 0.], [0.4, 0.4, 0.1])): continue
 
-        arm.get_obstacle_data(args.path, args.step_size)
+        # arm.get_obstacle_data(args.path, args.step_size)
+
+        if (not os.path.exists(args.path)):
+            os.makedirs(args.path)
 
         while (arm.index <= args.num_files):
             arm.go_to_joint_state()
@@ -41,7 +45,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', type=str, default='../dataset', help='location of dataset directory')
+    parser.add_argument('--path', type=str, default='../pnet_dataset', help='location of dataset directory')
     parser.add_argument('--num_files', type=int, default=10000, help='num of files')
     parser.add_argument('--step_size', type=float, default=0.01, help='The step size of the point cloud data')
     args = parser.parse_args()
