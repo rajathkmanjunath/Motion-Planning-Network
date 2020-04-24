@@ -1,4 +1,5 @@
 import argparse
+import numpy as np
 import os
 
 import torch
@@ -30,7 +31,7 @@ def main(args):
 
     test_set = plan_dataset(partition['test'], args.path)
     test_loader = data.DataLoader(test_set, **test_params)
-
+    lossarr = []
     mse = nn.MSELoss()
     planner = PNet(14, 7).double()
     # if (os.path.isfile(os.path.join(os.path.curdir, 'pnet_weights.pt'))):
@@ -57,6 +58,7 @@ def main(args):
 
             prediction = planner(states)
             loss = mse(plan, prediction)
+            lossarr.append(loss.item())
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -66,6 +68,7 @@ def main(args):
                                                                           n_total_steps,
                                                                           loss.item()))
 
+    torch.save(np.array(lossarr), os.path.join(os.path.curdir, 'loss.npy'))
     torch.save(planner.state_dict(), os.path.join(os.path.curdir, 'pnet_weights.pt'))
 
     with torch.no_grad():
