@@ -32,7 +32,7 @@ def main(args):
     test_loader = data.DataLoader(test_set, **test_params)
 
     mse = nn.MSELoss()
-    planner = PNet(14, 7)
+    planner = PNet(14, 7).double()
     # if (os.path.isfile(os.path.join(os.path.curdir, 'pnet_weights.pt'))):
     #     planner.load_state_dict(torch.load(os.path.join(os.path.curdir, 'pnet_weights.pt')))
 
@@ -45,9 +45,10 @@ def main(args):
 
     for epoch in range(args.num_epochs):
         for i, (states, plan) in enumerate(train_loader):
-            states = states.float()
-            plan = plan.float()
-            plan = Variable(plan)
+            # print(states[:7][0])
+            # print(plan[0])
+            # states = states.float()
+            # plan = plan.float()
             states = Variable(states)
 
             if (args.cuda == 'cuda'):
@@ -60,7 +61,7 @@ def main(args):
             loss.backward()
             optimizer.step()
 
-            if ((i + 1) % 50 == 0):
+            if ((i + 1) % 1 == 0):
                 print('epoch {0}/{1}, step {2}/{3}, loss = {4:4f}'.format(epoch + 1, args.num_epochs, i + 1,
                                                                           n_total_steps,
                                                                           loss.item()))
@@ -71,8 +72,8 @@ def main(args):
         n_correct = 0
         n_samples = 0
         for (states, plan) in test_loader:
-            states = states.float()
-            plan = plan.float()
+            # states = states.float()
+            # plan = plan.float()
 
             if (args.cuda == 'cuda'):
                 states = states.cuda()
