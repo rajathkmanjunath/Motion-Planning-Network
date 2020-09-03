@@ -1,5 +1,5 @@
 # Motion Planning Network.
-##Intoduction
+## Intoduction
 
 Implementation of Neural-based Motion planner for Motion planning of Panda Arm robot.
 There are two variations of Motion planner:
